@@ -1,0 +1,4 @@
+C:\Users\Hugo Santos\Desktop\SQL Connection\SQL Connection\bin\SQL Connection.dll
+C:\Users\Hugo Santos\Desktop\SQL Connection\SQL Connection\bin\SQL Connection.pdb
+C:\Users\Hugo Santos\Desktop\SQL Connection\SQL Connection\obj\Debug\SQL Connection.dll
+C:\Users\Hugo Santos\Desktop\SQL Connection\SQL Connection\obj\Debug\SQL Connection.pdb
