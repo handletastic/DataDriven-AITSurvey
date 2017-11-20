@@ -37,6 +37,18 @@ namespace SQL_Connection
                 HttpContext.Current.Session["questionNumber"] = currentQuestion; //now store the previously set currentQuestion to the session, so that when we run this the second time it will run the if part of this statement
             }
 
+            //get question from DB
+            //get connection string from webconfig
+            string connectionString = ConfigurationManager.ConnectionStrings["testConnection"].ConnectionString;
+
+            //build sql connectoin, use connection string, open(connect)
+            SqlConnection connection = new SqlConnection();
+            connection.ConnectionString = connectionString;
+            connection.Open();
+
+            //build sql command to get current question
+            SqlCommand command = new SqlCommand("SELECT * FROM TextQuestion, TestQuestionType WHERE TestQuestion.questionType = TestQuestionType.typeID AND TestQuestion.questionId = " + currentQuestion, connection);
+
             //check session state to see what question we're up to
             //get question from DB
             //IF question is checkBox, radio or dropdownList
