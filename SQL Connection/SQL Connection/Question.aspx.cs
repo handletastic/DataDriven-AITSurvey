@@ -24,6 +24,20 @@ namespace SQL_Connection
             }
 
             //check session state to see what question we're up to
+            int currentQuestion; //TODO for assignment, don't use default values, ask the DB for first question instead
+            if (HttpContext.Current.Session["questionNumber"] != null)
+            {
+                // we have a question numebr stored in the session, we should use that value for current question
+                currentQuestion = (int)HttpContext.Current.Session["questionNumber"];//session stores Objects, cast to int
+            }
+            else
+            {
+                //no value stored in session, set it to our first question number
+                currentQuestion = 1;
+                HttpContext.Current.Session["questionNumber"] = currentQuestion; //now store the previously set currentQuestion to the session, so that when we run this the second time it will run the if part of this statement
+            }
+
+            //check session state to see what question we're up to
             //get question from DB
             //IF question is checkBox, radio or dropdownList
                 //get list of options from DB too
