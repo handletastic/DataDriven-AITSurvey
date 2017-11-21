@@ -47,31 +47,66 @@ namespace SQL_Connection
             connection.Open();
 
             //build sql command to get current question
-            SqlCommand command = new SqlCommand("SELECT * FROM TextQuestion, TestQuestionType WHERE TestQuestion.questionType = TestQuestionType.typeID AND TestQuestion.questionId = " + currentQuestion, connection);
+            //joining two tables because TestQuestion table has a foreign key column for type, but I want to get the type name as a string which is on the TestQuestionType table
+            SqlCommand command = new SqlCommand("SELECT * FROM TestQuestion, TestQuestionType WHERE TestQuestion.questionType = TestQuestionType.typeID AND TestQuestion.questionId = " + currentQuestion, connection);
 
-            //check session state to see what question we're up to
-            //get question from DB
-            //IF question is checkBox, radio or dropdownList
-                //get list of options from DB too
-            //IF checkbox type of question
-            CheckBoxQuestionControl checkBoxQuestion = (CheckBoxQuestionControl)LoadControl("~/CheckBoxQuestionControl.ascx");
-            checkBoxQuestion.ID = "checkBoxQuestion";
-            checkBoxQuestion.QuestionLabel.Text = "Select weapons you wish to buy:";
-            //Get options/choices for this checkbox question from DB
-            //add all choices as items to checkbox list
-            ListItem item1 = new ListItem("AK47", "weap1");
-            ListItem item2 = new ListItem("SMG", "weap2");
-            ListItem item3 = new ListItem("Knife", "weap3");
-            ListItem item4 = new ListItem("Nuke", "weap4");
+            //run command, store results in SqlDataReader
+            SqlDataReader reader = command.ExecuteReader();
 
-            checkBoxQuestion.QuestionCheckBoxList.Items.Add(item1);
-            checkBoxQuestion.QuestionCheckBoxList.Items.Add(item2);
-            checkBoxQuestion.QuestionCheckBoxList.Items.Add(item3);
-            checkBoxQuestion.QuestionCheckBoxList.Items.Add(item4);
+            //loop through the rows of results
+            while (reader.Read())
+            {
+                //get question text and type from this row of results
+                string questionText = reader["text"].ToString(); // "text" is a column from the TestQuestion table
+                string questionType = reader["typeName"].ToString(); // "typeName" is a column from the TestQuestionType table
 
-            //ADD checkbox question control to the web page
-            questionPlaceHolder.Controls.Add(checkBoxQuestion);
+                //using type, load up correct web user control (e.g: checkbox question)
+                if (questionType.Equals("TextBox"))
+                {
+                    //load the control up
+                    TextboxQuestionControl textboxControl = (TextboxQuestionControl)LoadControl("~/TextboxQuestionControl.ascx");
+                    //set its ID
+                    textboxControl.ID = "textboxQuestionControl";
+                    //set its question text label
+                    textboxControl.QuestionLabel.Text = questionText;
 
+                    //add it to the placeholder on our webpage
+                    questionPlaceHolder.Controls.Add(textboxControl);
+                }
+                else if (questionType.Equals("CheckBox"))
+                {
+                    //load the control up
+                    CheckBoxQuestionControl checkBoxQuestion = (CheckBoxQuestionControl)LoadControl("~/CheckBoxQuestionControl.ascx");
+                    //set its ID
+                    checkBoxQuestion.ID = "checkBoxQuestion";
+                    //set text label to question text
+                    checkBoxQuestion.QuestionLabel.Text = questionText;
+
+                    //we need to talk to the database to get all of the options for this question to display
+                    //e.g: what gender? then options like male, female etc...
+                    SqlCommand optionCommand = new SqlCommand(
+                        "SELECT * FROM TestQuestionOption WHERE questionId = " + currentQuestion, connection);
+
+                    //run command, get ready to read results
+                    SqlDataReader optionReader = optionCommand.ExecuteReader();
+
+                    //cycle through rows of options
+                    while (optionReader.Read())
+                    {
+                        //for every row, we will build a list item representing it
+                        //                           display member(for ui),          value member(for devs to store if selected)
+                        ListItem item = new ListItem(optionReader["text"].ToString(), optionReader["optionId"].ToString());
+                        //add item to our checkbox list
+                        checkBoxQuestion.QuestionCheckBoxList.Items.Add(item);
+                    }
+                    //finally have all the checkbox list items populated, add our checkbox question control to the placeholder
+                    questionPlaceHolder.Controls.Add(checkBoxQuestion);
+                }
+                //TODO else if radio
+                //TODO else if dropdown
+            }
+
+            connection.Close();
          }
 
         protected void nextButton_Click(object sender, EventArgs e)

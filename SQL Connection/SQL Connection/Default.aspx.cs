@@ -16,7 +16,7 @@ namespace SQL_Connection
         protected void Page_Load(object sender, EventArgs e)
         {
             //get our test connection string from the web config
-            string connectionString = ConfigurationManager.ConnectionStrings["testConnectionString"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings["testConnection"].ConnectionString;
             SqlConnection connection = new SqlConnection();
 
             connection.ConnectionString = connectionString;
