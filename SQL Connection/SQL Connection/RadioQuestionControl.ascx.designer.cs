@@ -10,7 +10,7 @@
 namespace SQL_Connection {
     
     
-    public partial class TextBoxQuestionControl {
+    public partial class RadioQuestionControl {
         
         /// <summary>
         /// questionLabel control.
@@ -22,12 +22,12 @@ namespace SQL_Connection {
         protected global::System.Web.UI.WebControls.Label questionLabel;
         
         /// <summary>
-        /// questionTextBox control.
+        /// questionRadioList control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox questionTextBox;
+        protected global::System.Web.UI.WebControls.RadioButtonList questionRadioList;
     }
 }

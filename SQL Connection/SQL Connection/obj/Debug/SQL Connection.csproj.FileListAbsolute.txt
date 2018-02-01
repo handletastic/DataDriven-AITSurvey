@@ -6,3 +6,4 @@ C:\Users\Hugo Santos\Desktop\AITSurvey Project\SQL Connection\SQL Connection\bin
 C:\Users\Hugo Santos\Desktop\AITSurvey Project\SQL Connection\SQL Connection\bin\SQL Connection.pdb
 C:\Users\Hugo Santos\Desktop\AITSurvey Project\SQL Connection\SQL Connection\obj\Debug\SQL Connection.dll
 C:\Users\Hugo Santos\Desktop\AITSurvey Project\SQL Connection\SQL Connection\obj\Debug\SQL Connection.pdb
+C:\Users\Hugo Santos\Desktop\AITSurvey Project\SQL Connection\SQL Connection\obj\Debug\SQL Connection.csprojResolveAssemblyReference.cache

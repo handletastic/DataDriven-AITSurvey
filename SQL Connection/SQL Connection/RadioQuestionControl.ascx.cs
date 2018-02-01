@@ -7,23 +7,27 @@ using System.Web.UI.WebControls;
 
 namespace SQL_Connection
 {
-    public partial class TextBoxQuestionControl : System.Web.UI.UserControl
+    public partial class RadioQuestionControl : System.Web.UI.UserControl
     {
+
+        //uppercase 'QuestionLabel' for the property, lowercase 'questionLabel' for the UI element
         public Label QuestionLabel
         {
             get { return questionLabel; }
             set { questionLabel = value; }
         }
 
-        public TextBox QuestionTextBox
+        public RadioButtonList QuestionRadioList
         {
-            get { return questionTextBox; }
-            set { questionTextBox = value; }
+            get { return questionRadioList; }
+            set { questionRadioList = value; }
         }
+
 
         protected void Page_Load(object sender, EventArgs e)
         {
 
         }
+        
     }
 }

@@ -31,8 +31,7 @@ namespace SQL_Connection
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            //If have dynamically added html intems, rebuild them here each time
-            //If viewState exists (stuff clicked on, typed into, filled in etc), those values are copie into dynamic objects at the end of Page_Load
+            //If have dynamically added html items, rebuild them here each time
             Response.Write("Page Load <br/>");
 
             //If want to do something on page first visit and not on refresh
@@ -44,6 +43,7 @@ namespace SQL_Connection
             {
                 Response.Write("Page Reloaded <br/>");
             }
+            //If viewState exists (stuff clicked on, typed into, filled in etc), those values are copied into dynamic objects at the end of Page_Load
         }
 
         protected void Page_LoadComplete(object sender, EventArgs e)

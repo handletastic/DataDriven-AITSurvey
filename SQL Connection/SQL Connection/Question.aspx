@@ -8,14 +8,7 @@
 </head>
 <body>
     <form id="form1" runat="server">
-    <div>
     
-        <asp:Label ID="usernameLabel" runat="server" Text="Label"></asp:Label>
-        <br />
-        <br />
-        <br />
-    
-    </div>
     <asp:PlaceHolder ID="questionPlaceHolder" runat="server"></asp:PlaceHolder>
     <br />
     <asp:Button ID="nextButton" runat="server" onclick="nextButton_Click" 

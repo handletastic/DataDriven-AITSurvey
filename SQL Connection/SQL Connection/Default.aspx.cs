@@ -19,11 +19,11 @@ namespace SQL_Connection
             string connectionString = ConfigurationManager.ConnectionStrings["testConnection"].ConnectionString;
             SqlConnection connection = new SqlConnection();
 
-            connection.ConnectionString = connectionString;
+            connection.ConnectionString = ConfigurationManager.ConnectionStrings["testConnection"].ConnectionString;
             connection.Open(); //open connection using connectionString
 
             //setup basic sql command
-            SqlCommand command = new SqlCommand("SELECT * FROM TestQuestion", connection);
+            SqlCommand command = new SqlCommand("SELECT * FROM questions", connection);
 
             //execute command
             SqlDataReader reader = command.ExecuteReader();

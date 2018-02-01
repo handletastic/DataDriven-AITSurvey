@@ -59,14 +59,17 @@
     <Content Include="LifeCycle.aspx" />
     <Content Include="Login.aspx" />
     <Content Include="Question.aspx" />
+    <Content Include="RadioQuestionControl.ascx" />
     <Content Include="Styles\Site.css" />
     <Content Include="Default.aspx" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\jquery-1.4.1-vsdoc.js" />
     <Content Include="Scripts\jquery-1.4.1.js" />
     <Content Include="Scripts\jquery-1.4.1.min.js" />
-    <Content Include="TextboxQuestionControl.ascx" />
-    <Content Include="Web.config" />
+    <Content Include="TextBoxQuestionControl.ascx" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -110,6 +113,7 @@
     <Compile Include="Account\Register.aspx.designer.cs">
       <DependentUpon>Register.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Answer.cs" />
     <Compile Include="CheckBoxQuestionControl.ascx.cs">
       <DependentUpon>CheckBoxQuestionControl.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -149,6 +153,13 @@
     <Compile Include="Question.aspx.designer.cs">
       <DependentUpon>Question.aspx</DependentUpon>
     </Compile>
+    <Compile Include="RadioQuestionControl.ascx.cs">
+      <DependentUpon>RadioQuestionControl.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="RadioQuestionControl.ascx.designer.cs">
+      <DependentUpon>RadioQuestionControl.ascx</DependentUpon>
+    </Compile>
     <Compile Include="SessionHelper.cs" />
     <Compile Include="Site.Master.cs">
       <DependentUpon>Site.Master</DependentUpon>
@@ -157,12 +168,12 @@
     <Compile Include="Site.Master.designer.cs">
       <DependentUpon>Site.Master</DependentUpon>
     </Compile>
-    <Compile Include="TextboxQuestionControl.ascx.cs">
-      <DependentUpon>TextboxQuestionControl.ascx</DependentUpon>
+    <Compile Include="TextBoxQuestionControl.ascx.cs">
+      <DependentUpon>TextBoxQuestionControl.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="TextboxQuestionControl.ascx.designer.cs">
-      <DependentUpon>TextboxQuestionControl.ascx</DependentUpon>
+    <Compile Include="TextBoxQuestionControl.ascx.designer.cs">
+      <DependentUpon>TextBoxQuestionControl.ascx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

@@ -7,10 +7,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SQL_Connection {
+namespace IP_Web_App {
     
     
-    public partial class Question {
+    public partial class ShowIP {
         
         /// <summary>
         /// form1 control.
@@ -22,30 +22,12 @@ namespace SQL_Connection {
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
         
         /// <summary>
-        /// questionPlaceHolder control.
+        /// IPLabel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder questionPlaceHolder;
-        
-        /// <summary>
-        /// nextButton control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button nextButton;
-        
-        /// <summary>
-        /// selectedAnswerBulletedList control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.BulletedList selectedAnswerBulletedList;
+        protected global::System.Web.UI.WebControls.Label IPLabel;
     }
 }
