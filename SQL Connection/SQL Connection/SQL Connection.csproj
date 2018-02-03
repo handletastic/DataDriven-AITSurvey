@@ -121,6 +121,7 @@
     <Compile Include="CheckBoxQuestionControl.ascx.designer.cs">
       <DependentUpon>CheckBoxQuestionControl.ascx</DependentUpon>
     </Compile>
+    <Compile Include="DBUtil.cs" />
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
