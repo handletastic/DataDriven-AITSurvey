@@ -1,0 +1,23 @@
+/*
+ * AITResearch Master Stylesheet
+ */
+
+body {
+    padding:0 2em !important;
+}
+
+.card-header {
+    padding:1em !important;
+}
+
+.card-body {
+    padding:1em !important;
+}
+
+.label-input-spacing {
+    margin-top:1em !important;
+}
+
+.label-question {
+    font-size: 1rem !important;
+}

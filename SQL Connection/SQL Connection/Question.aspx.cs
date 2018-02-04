@@ -31,8 +31,6 @@ namespace SQL_Connection
                 this.currentQuestionId = GetCurrentQuestionID();
             }
 
-            
-
             this.selectedOptionsIdList = new List<int>();
             if (HttpContext.Current.Session["selectedOptionsIdList"] != null)
             {
@@ -57,6 +55,8 @@ namespace SQL_Connection
             QuestionLoader(this.currentQuestionId);
         }
 
+
+
         private SqlConnection ConnectToSqlDb()
         {
             string connectionString = ConfigurationManager.ConnectionStrings["testConnection"].ConnectionString;
@@ -66,12 +66,12 @@ namespace SQL_Connection
             return connection;
         }
 
-        //OK
+
+
         private void UpdateFollowUpListOnSession() {
             HttpContext.Current.Session["followUpQuestionIdList"] = this.followUpQuestionIdList;
         }
 
-        //OK
         private int GetCurrentQuestionID()
         {
             int questionId = 0;
@@ -107,7 +107,6 @@ namespace SQL_Connection
             return questionId;
         }
 
-        //OK
         private List<Answer> GetListOfAnswersFromSession()
         {
             List<Answer> answers = new List<Answer>();
@@ -116,7 +115,6 @@ namespace SQL_Connection
             return answers;
         }
 
-        //OK
         private Int32 GetFollowUpQuestionID(int _option_id)
         {
             SqlConnection connection = ConnectToSqlDb();
@@ -134,7 +132,6 @@ namespace SQL_Connection
             return followUpQuestionID;
         }
 
-        //OK
         private void CheckAndAddFollowUpQuestionToSession(int _option_id)
         {   
             int followUpFromOption = GetFollowUpQuestionID(_option_id);
@@ -162,7 +159,6 @@ namespace SQL_Connection
             return questionText;
         }
 
-        //OK
         private string GetCurrentQuestionType(int _currentQuestionID)
         {
             SqlConnection connection = ConnectToSqlDb();
@@ -179,7 +175,6 @@ namespace SQL_Connection
             return questionType;
         }
 
-        //OK
         private void QuestionLoader(int _currentQuestionID)
         {
             questionPlaceHolder.Controls.Clear();
@@ -248,6 +243,7 @@ namespace SQL_Connection
         {
 
             List<Answer> _tmpSessionAnswers = GetListOfAnswersFromSession();
+
             #region Radio Question
             RadioQuestionControl radioQuestion = (RadioQuestionControl)questionPlaceHolder.FindControl("radioQuestion");
             if (radioQuestion != null)
@@ -284,9 +280,6 @@ namespace SQL_Connection
             }
             #endregion
 
-            HttpContext.Current.Session["sessionAnswers"] = _tmpSessionAnswers;
-            HttpContext.Current.Session["selectedOptionIdList"] = selectedOptionsIdList;
-
             #region TextBox Question
             TextBoxQuestionControl textBoxQuestion = (TextBoxQuestionControl)questionPlaceHolder.FindControl("textBoxQuestionControl");
             if (textBoxQuestion != null)
@@ -299,6 +292,8 @@ namespace SQL_Connection
             }
             #endregion
 
+            HttpContext.Current.Session["sessionAnswers"] = _tmpSessionAnswers;
+            HttpContext.Current.Session["selectedOptionIdList"] = selectedOptionsIdList;
         }
 
         private void UpdateFollowUpQuestionIdList() {
@@ -306,6 +301,8 @@ namespace SQL_Connection
                 foreach (int i in selectedOptionsIdList)
                     CheckAndAddFollowUpQuestionToSession(i);
         }
+
+
 
         protected void nextButton_Click(object sender, EventArgs e)
         {
@@ -320,8 +317,5 @@ namespace SQL_Connection
             QuestionLoader(this.currentQuestionId);
 
         }
-    
-
-
     }
 }
