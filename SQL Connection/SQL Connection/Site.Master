@@ -3,8 +3,18 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head runat="server">
-    <title></title>
-    <link href="~/Styles/Site.css" rel="stylesheet" type="text/css" />
+    <title>Survey</title>
+
+    <!-- font imports -->
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <!-- materialize stylesheet -->
+    <link type="text/css" rel="stylesheet" href="/styles/css/materialize.min.css"  media="screen,projection"/>
+    <!-- custom master stylesheet -->
+    <link type="text/css" rel="stylesheet" href="/styles/master.css"/>
+    <!-- display responsive configuration -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+
     <asp:ContentPlaceHolder ID="HeadContent" runat="server">
     </asp:ContentPlaceHolder>
 </head>
@@ -48,4 +58,9 @@
     </div>
     </form>
 </body>
+
+    <!-- js imports -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="/style/js/materialize.min.js"></script>
+
 </html>
