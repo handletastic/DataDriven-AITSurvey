@@ -17,6 +17,8 @@ namespace SQL_Connection
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            CreateSessionID();
+
             this.followUpQuestionIdList = new List<int>();
             if (HttpContext.Current.Session["followUpQuestionIdList"] != null)
             {
@@ -36,28 +38,17 @@ namespace SQL_Connection
             {
                 this.followUpQuestionIdList = (List<int>)HttpContext.Current.Session["selectedOptionsIdList"];
             }
-            
-            //TODO - load a login page if user is not logged in already
-            #region Login Page
-            //if not logged-in go to login page
-            /*if (!SessionHelper.IsLoggedIn())
-            {
-                Response.Redirect("Login.aspx");
-                return; //make sure that the rest of method does not run
-            }
-            else
-            {
-                usernameLabel.Text = SessionHelper.getUserName();
-            }
-            */
-            #endregion
 
             if (currentQuestionId > 0)
                 QuestionLoader(this.currentQuestionId);
             else
-                nextButton.Text = "Win!";
+            {
+                nextButton.Text = "Submit";
+                Label lb = new Label();
+                lb.Text = "Thank you for completing the survey. </br > Click the 'Submit' button to submit your answers";
+                questionPlaceHolder.Controls.Add(lb);
+            }
         }
-
 
 
         private SqlConnection ConnectToSqlDb()
@@ -67,6 +58,82 @@ namespace SQL_Connection
             connection.ConnectionString = connectionString;
             connection.Open();
             return connection;
+        }
+
+
+        
+        private string GetIPAddress()
+        {
+            //get IP through PROXY
+            //====================
+            System.Web.HttpContext context = System.Web.HttpContext.Current;
+            string ipAddress = context.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+
+            //should break ipAddress down, but here is what it looks like:
+            // return ipAddress;
+            if (!string.IsNullOrEmpty(ipAddress))
+            {
+                string[] address = ipAddress.Split(',');
+                if (address.Length != 0)
+                {
+                    return address[0];
+                }
+            }
+            //if not proxy, get nice ip, give that back :(
+            //ACROSS WEB HTTP REQUEST
+            //=======================
+            ipAddress = context.Request.UserHostAddress;//ServerVariables["REMOTE_ADDR"];
+
+            if (ipAddress.Trim() == "::1")//ITS LOCAL(either lan or on same machine), CHECK LAN IP INSTEAD
+            {
+                //This is for Local(LAN) Connected ID Address
+                string stringHostName = System.Net.Dns.GetHostName();
+                //Get Ip Host Entry
+                System.Net.IPHostEntry ipHostEntries = System.Net.Dns.GetHostEntry(stringHostName);
+                //Get Ip Address From The Ip Host Entry Address List
+                System.Net.IPAddress[] arrIpAddress = ipHostEntries.AddressList;
+
+                try
+                {
+                    ipAddress = arrIpAddress[1].ToString();
+                }
+                catch
+                {
+                    try
+                    {
+                        ipAddress = arrIpAddress[0].ToString();
+                    }
+                    catch
+                    {
+                        try
+                        {
+                            arrIpAddress = System.Net.Dns.GetHostAddresses(stringHostName);
+                            ipAddress = arrIpAddress[0].ToString();
+                        }
+                        catch
+                        {
+                            ipAddress = "127.0.0.1";
+                        }
+                    }
+                }
+            }
+            return ipAddress;
+        }
+
+        private void CreateSessionID()
+        {
+            if (HttpContext.Current.Session["sessionId"] == null)
+            {
+                string respondentIpAddress = GetIPAddress();
+
+                SqlConnection connection = ConnectToSqlDb();
+
+                SqlCommand command = new SqlCommand("INSERT INTO sessions (date, ip, respondent_id) VALUES ('" + System.DateTime.Now + "', '" + respondentIpAddress + "', '" + 1 + "'); SELECT CAST(scope_identity() AS int)", connection);
+                //SqlCommand command = new SqlCommand("INSERT INTO sessions (date, ip, respondent_id) VALUES ('" + System.DateTime.Now + "', '" + respondentIpAddress + "', '" + respondentid + "'); SELECT CAST(scope_identity() AS int)", connection);
+
+                int newSessionId = (int)command.ExecuteScalar();
+                HttpContext.Current.Session["sessionId"] = newSessionId;
+            }
         }
 
 
@@ -319,7 +386,6 @@ namespace SQL_Connection
 
         protected void nextButton_Click(object sender, EventArgs e)
         {
-            
             SubmitCurrentQuestionAnswersToSession();            
 
             UpdateFollowUpQuestionIdList();
@@ -327,8 +393,12 @@ namespace SQL_Connection
             this.currentQuestionId = GetCurrentQuestionID();
             HttpContext.Current.Session["currentQuestionId"] = this.currentQuestionId;
 
-            Response.Redirect("Question.aspx");
+            if (this.currentQuestionId == 0)
+            {
+                SubmitSessionAnswersToDatabase();
+            }
 
+            Response.Redirect("Question.aspx");
         }
     }
 }
