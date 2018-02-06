@@ -45,7 +45,6 @@ namespace SQL_Connection
                 ChangeNextButtonToSubmit();
         }
 
-
         private SqlConnection ConnectToSqlDb()
         {
             string connectionString = ConfigurationManager.ConnectionStrings["testConnection"].ConnectionString;
@@ -54,7 +53,6 @@ namespace SQL_Connection
             connection.Open();
             return connection;
         }
-
 
         //user registration functions
         private string GetIPAddress()
@@ -238,6 +236,21 @@ namespace SQL_Connection
             return questionId;
         }
         private string GetCurrentQuestionText(int _currentQuestionID)
+        {
+            SqlConnection connection = ConnectToSqlDb();
+            SqlCommand getCurrentQuestionAndItsQuestionType = new SqlCommand("SELECT * FROM questions, question_types WHERE questions.type = question_types.id AND questions.id = " + _currentQuestionID, connection);
+            SqlDataReader reader = getCurrentQuestionAndItsQuestionType.ExecuteReader();
+
+            string questionText = "";
+            while (reader.Read())
+            {
+                questionText = reader["text"].ToString(); // "text" is a column from the TestQuestion table
+            }
+
+            connection.Close();
+
+            return questionText;
+        }
         private string GetCurrentQuestionType(int _currentQuestionID)
         {
             SqlConnection connection = ConnectToSqlDb();
@@ -358,16 +371,17 @@ namespace SQL_Connection
             int followUpFromOption = GetFollowUpQuestionID(_option_id);
             if (followUpFromOption > 0)
             {
-                this.followUpQuestionIdList.Add(followUpFromOption);
-                UpdateFollowUpListOnSession();
+                if(!followUpQuestionIdList.Exists(x => x == followUpFromOption)){
+                    this.followUpQuestionIdList.Add(followUpFromOption);
+                    UpdateFollowUpListOnSession();
+                };
             }
         }
 
 
         protected void nextButton_Click(object sender, EventArgs e)
         {
-            SubmitCurrentQuestionAnswersToSession();            
-
+            SubmitCurrentQuestionAnswersToSession();
             UpdateFollowUpQuestionIdList();
 
             this.currentQuestionId = GetCurrentQuestionID();
