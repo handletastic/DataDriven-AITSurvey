@@ -42,12 +42,7 @@ namespace SQL_Connection
             if (currentQuestionId > 0)
                 QuestionLoader(this.currentQuestionId);
             else
-            {
-                nextButton.Text = "Submit";
-                Label lb = new Label();
-                lb.Text = "Thank you for completing the survey. </br > Click the 'Submit' button to submit your answers";
-                questionPlaceHolder.Controls.Add(lb);
-            }
+                ChangeNextButtonToSubmit();
         }
 
 
@@ -61,7 +56,7 @@ namespace SQL_Connection
         }
 
 
-        
+        //user registration functions
         private string GetIPAddress()
         {
             //get IP through PROXY
@@ -119,7 +114,6 @@ namespace SQL_Connection
             }
             return ipAddress;
         }
-
         private void CreateSessionID()
         {
             if (HttpContext.Current.Session["sessionId"] == null)
@@ -136,115 +130,14 @@ namespace SQL_Connection
             }
         }
 
-
-
-        private void UpdateFollowUpListOnSession() {
-            HttpContext.Current.Session["followUpQuestionIdList"] = this.followUpQuestionIdList;
-        }
-
-        private int GetCurrentQuestionID()
+        //interface functions
+        private void ChangeNextButtonToSubmit()
         {
-            int questionId = 0;
-
-            if (this.followUpQuestionIdList.Count > 0)
-            {
-                questionId = this.followUpQuestionIdList.First();
-                this.followUpQuestionIdList.RemoveAt(0);
-                UpdateFollowUpListOnSession();
-            }
-            else if (currentQuestionId > 0)
-            {
-                SqlConnection connection = ConnectToSqlDb();
-                SqlCommand command = new SqlCommand("SELECT * FROM questions where id = " + this.currentQuestionId, connection);
-                SqlDataReader reader = command.ExecuteReader();
-
-                reader.Read();
-                currentQuestionId = (int)reader["next_question_id"];
-                questionId = currentQuestionId;
-                HttpContext.Current.Session["currentQuestionId"] = currentQuestionId;
-                connection.Close();
-            }
-            else
-            {
-                SqlConnection connection = ConnectToSqlDb();
-                SqlCommand getFirstQuestionID = new SqlCommand("SELECT min(id) FROM questions", connection);
-                SqlDataReader reader = getFirstQuestionID.ExecuteReader();
-                reader.Read();
-                questionId = Int32.Parse(reader.GetValue(0).ToString());
-                connection.Close();
-                HttpContext.Current.Session["currentQuestionId"] = questionId;
-            }
-            return questionId;
+            nextButton.Text = "Submit";
+            Label lb = new Label();
+            lb.Text = "Thank you for completing the survey. </br > Click the 'Submit' button to submit your answers";
+            questionPlaceHolder.Controls.Add(lb);
         }
-
-        private List<Answer> GetListOfAnswersFromSession()
-        {
-            List<Answer> answers = new List<Answer>();
-            if (HttpContext.Current.Session["sessionAnswers"] != null)
-                answers = (List<Answer>)HttpContext.Current.Session["sessionAnswers"];
-            return answers;
-        }
-
-        private Int32 GetFollowUpQuestionID(int _option_id)
-        {
-            SqlConnection connection = ConnectToSqlDb();
-            SqlCommand getFollowUpID = new SqlCommand("SELECT followup_question_id FROM options WHERE id = " + _option_id, connection);
-            SqlDataReader reader = getFollowUpID.ExecuteReader();
-
-            int followUpQuestionID = 0;
-
-            if (reader.HasRows && reader.Read() && !reader.IsDBNull(0))
-            {
-                followUpQuestionID = Int32.Parse(reader.GetValue(0).ToString());
-            }                
-
-            connection.Close();
-            return followUpQuestionID;
-        }
-
-        private void CheckAndAddFollowUpQuestionToSession(int _option_id)
-        {   
-            int followUpFromOption = GetFollowUpQuestionID(_option_id);
-            if (followUpFromOption > 0)
-            {
-                this.followUpQuestionIdList.Add(followUpFromOption);
-                UpdateFollowUpListOnSession();
-            }
-        }
-
-        private string GetCurrentQuestionText(int _currentQuestionID)
-        {
-            SqlConnection connection = ConnectToSqlDb();
-            SqlCommand getCurrentQuestionAndItsQuestionType = new SqlCommand("SELECT * FROM questions, question_types WHERE questions.type = question_types.id AND questions.id = " + _currentQuestionID, connection);
-            SqlDataReader reader = getCurrentQuestionAndItsQuestionType.ExecuteReader();
-
-            string questionText = "";
-            while (reader.Read())
-            {
-                questionText = reader["text"].ToString(); // "text" is a column from the TestQuestion table
-            }
-
-            connection.Close();
-
-            return questionText;
-        }
-
-        private string GetCurrentQuestionType(int _currentQuestionID)
-        {
-            SqlConnection connection = ConnectToSqlDb();
-            SqlCommand getCurrentQuestionAndItsQuestionType = new SqlCommand("SELECT * FROM questions, question_types WHERE questions.type = question_types.id AND questions.id = " + _currentQuestionID, connection);
-            SqlDataReader reader = getCurrentQuestionAndItsQuestionType.ExecuteReader();
-
-            string questionType = "";
-            while (reader.Read())
-            {
-                questionType = reader["type_name"].ToString();
-            }
-            connection.Close();
-
-            return questionType;
-        }
-
         private void QuestionLoader(int _currentQuestionID)
         {
             questionPlaceHolder.Controls.Clear();
@@ -309,7 +202,66 @@ namespace SQL_Connection
             #endregion
         }
 
-        //submit answers
+        //get current question functions
+        private int GetCurrentQuestionID()
+        {
+            int questionId = 0;
+
+            if (this.followUpQuestionIdList.Count > 0)
+            {
+                questionId = this.followUpQuestionIdList.First();
+                this.followUpQuestionIdList.RemoveAt(0);
+                UpdateFollowUpListOnSession();
+            }
+            else if (currentQuestionId > 0)
+            {
+                SqlConnection connection = ConnectToSqlDb();
+                SqlCommand command = new SqlCommand("SELECT * FROM questions where id = " + this.currentQuestionId, connection);
+                SqlDataReader reader = command.ExecuteReader();
+
+                reader.Read();
+                currentQuestionId = (int)reader["next_question_id"];
+                questionId = currentQuestionId;
+                HttpContext.Current.Session["currentQuestionId"] = currentQuestionId;
+                connection.Close();
+            }
+            else
+            {
+                SqlConnection connection = ConnectToSqlDb();
+                SqlCommand getFirstQuestionID = new SqlCommand("SELECT min(id) FROM questions", connection);
+                SqlDataReader reader = getFirstQuestionID.ExecuteReader();
+                reader.Read();
+                questionId = Int32.Parse(reader.GetValue(0).ToString());
+                connection.Close();
+                HttpContext.Current.Session["currentQuestionId"] = questionId;
+            }
+            return questionId;
+        }
+        private string GetCurrentQuestionText(int _currentQuestionID)
+        private string GetCurrentQuestionType(int _currentQuestionID)
+        {
+            SqlConnection connection = ConnectToSqlDb();
+            SqlCommand getCurrentQuestionAndItsQuestionType = new SqlCommand("SELECT * FROM questions, question_types WHERE questions.type = question_types.id AND questions.id = " + _currentQuestionID, connection);
+            SqlDataReader reader = getCurrentQuestionAndItsQuestionType.ExecuteReader();
+
+            string questionType = "";
+            while (reader.Read())
+            {
+                questionType = reader["type_name"].ToString();
+            }
+            connection.Close();
+
+            return questionType;
+        }
+
+        //answer functions
+        private List<Answer> GetListOfAnswersFromSession()
+        {
+            List<Answer> answers = new List<Answer>();
+            if (HttpContext.Current.Session["sessionAnswers"] != null)
+                answers = (List<Answer>)HttpContext.Current.Session["sessionAnswers"];
+            return answers;
+        }
         private void SubmitCurrentQuestionAnswersToSession()
         {
 
@@ -376,12 +328,40 @@ namespace SQL_Connection
             connection.Close();
         }
 
+        //followup question functions
+        private Int32 GetFollowUpQuestionID(int _option_id)
+        {
+            SqlConnection connection = ConnectToSqlDb();
+            SqlCommand getFollowUpID = new SqlCommand("SELECT followup_question_id FROM options WHERE id = " + _option_id, connection);
+            SqlDataReader reader = getFollowUpID.ExecuteReader();
+
+            int followUpQuestionID = 0;
+
+            if (reader.HasRows && reader.Read() && !reader.IsDBNull(0))
+            {
+                followUpQuestionID = Int32.Parse(reader.GetValue(0).ToString());
+            }                
+
+            connection.Close();
+            return followUpQuestionID;
+        }
         private void UpdateFollowUpQuestionIdList() {
             if (selectedOptionsIdList != null)
                 foreach (int i in selectedOptionsIdList)
                     CheckAndAddFollowUpQuestionToSession(i);
         }
-
+        private void UpdateFollowUpListOnSession() {
+            HttpContext.Current.Session["followUpQuestionIdList"] = this.followUpQuestionIdList;
+        }
+        private void CheckAndAddFollowUpQuestionToSession(int _option_id)
+        {   
+            int followUpFromOption = GetFollowUpQuestionID(_option_id);
+            if (followUpFromOption > 0)
+            {
+                this.followUpQuestionIdList.Add(followUpFromOption);
+                UpdateFollowUpListOnSession();
+            }
+        }
 
 
         protected void nextButton_Click(object sender, EventArgs e)
