@@ -51,8 +51,11 @@ namespace SQL_Connection
             }
             */
             #endregion
-            
-            QuestionLoader(this.currentQuestionId);
+
+            if (currentQuestionId > 0)
+                QuestionLoader(this.currentQuestionId);
+            else
+                nextButton.Text = "Win!";
         }
 
 
@@ -239,6 +242,7 @@ namespace SQL_Connection
             #endregion
         }
 
+        //submit answers
         private void SubmitCurrentQuestionAnswersToSession()
         {
 
@@ -295,6 +299,15 @@ namespace SQL_Connection
             HttpContext.Current.Session["sessionAnswers"] = _tmpSessionAnswers;
             HttpContext.Current.Session["selectedOptionIdList"] = selectedOptionsIdList;
         }
+        private void SubmitSessionAnswersToDatabase()
+        {
+            SqlConnection connection = ConnectToSqlDb();
+            foreach (Answer a in (List<Answer>)HttpContext.Current.Session["sessionAnswers"])
+            {
+                SqlCommand insertCommand = new SqlCommand("INSERT INTO answers (text, question_id, session_id, option_id) VALUES ('" + a.text + "','" + a.question_id + "','" + (int)HttpContext.Current.Session["sessionID"] + "','" + a.option_id + "')", connection);
+            }
+            connection.Close();
+        }
 
         private void UpdateFollowUpQuestionIdList() {
             if (selectedOptionsIdList != null)
@@ -307,14 +320,14 @@ namespace SQL_Connection
         protected void nextButton_Click(object sender, EventArgs e)
         {
             
-            SubmitCurrentQuestionAnswersToSession();
+            SubmitCurrentQuestionAnswersToSession();            
 
             UpdateFollowUpQuestionIdList();
 
             this.currentQuestionId = GetCurrentQuestionID();
             HttpContext.Current.Session["currentQuestionId"] = this.currentQuestionId;
 
-            QuestionLoader(this.currentQuestionId);
+            Response.Redirect("Question.aspx");
 
         }
     }
