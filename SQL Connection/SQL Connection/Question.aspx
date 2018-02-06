@@ -1,22 +1,16 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Question.aspx.cs" Inherits="SQL_Connection.Question" %>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head runat="server">
-    <title></title>
-</head>
-<body>
-    <form id="form1" runat="server">
-    
+﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/Site.master" CodeBehind="Question.aspx.cs" Inherits="SQL_Connection.Question" %>
+<asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">
     <asp:PlaceHolder ID="questionPlaceHolder" runat="server"></asp:PlaceHolder>
     <br />
-    <asp:Button ID="nextButton" runat="server" onclick="nextButton_Click" 
-        Text="Next" />
-    <br />
-    <br />
+        <div class="row">
+                        
+            <!-- next button -->
+            <asp:Button CssClass="col s12 waves=effect waves-light btn-large" ID="nextButton" Text="Next" runat="server" onclick="nextButton_Click"/>
+            <br />
+            <br />
+            <br />
+
+        </div>
     <asp:BulletedList ID="selectedAnswerBulletedList" runat="server">
     </asp:BulletedList>
-    </form>
-</body>
-</html>
+</asp:Content>
